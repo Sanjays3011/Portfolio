@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanjay Saravanan | Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00f2ff;
+            --secondary: #7000ff;
+            --bg: #08090a;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
+            --transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: default; }
+        body { 
+            background: var(--bg); 
+            color: #fff; 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Interactive Background Glow */
+        #cursor-glow {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            background: radial-gradient(600px circle at var(--x, 50%) var(--y, 50%), rgba(0, 242, 255, 0.08), transparent 40%);
+            pointer-events: none;
+        }
+
+        .bg-base {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;
+            background: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #08090a 100%);
+        }
+
+        nav {
+            position: fixed; left: 40px; top: 50%; transform: translateY(-50%);
+            display: flex; flex-direction: column; gap: 15px; z-index: 100;
+        }
+        nav a {
+            width: 50px; height: 50px; background: var(--glass);
+            border: 1px solid var(--border); border-radius: 15px;
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; text-decoration: none; transition: var(--transition);
+            backdrop-filter: blur(10px); position: relative; cursor: pointer;
+        }
+        nav a:hover, nav a.active {
+            background: var(--primary); color: var(--bg);
+            box-shadow: 0 0 20px var(--primary); transform: scale(1.1);
+        }
+        nav a span { 
+            position: absolute; left: 70px; background: var(--primary); color: var(--bg);
+            padding: 5px 15px; border-radius: 5px; font-weight: 800; font-size: 0.7rem;
+            opacity: 0; pointer-events: none; transition: 0.3s; white-space: nowrap;
+        }
+        nav a:hover span { opacity: 1; left: 60px; }
+
+        section {
+            position: absolute; top: 0; left: 120px; right: 40px; bottom: 0;
+            opacity: 0; visibility: hidden; transform: translateY(20px);
+            transition: var(--transition); display: flex; align-items: center; justify-content: center;
+        }
+        section.active { opacity: 1; visibility: visible; transform: translateY(0); }
+
+        .content-card {
+            background: var(--glass); border: 1px solid var(--border);
+            padding: 50px; border-radius: 40px; backdrop-filter: blur(25px);
+            max-width: 1000px; width: 100%; max-height: 90vh; overflow-y: auto;
+            scrollbar-width: thin; scrollbar-color: var(--primary) transparent;
+        }
+
+        .accent { color: var(--primary); }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
+        .item { 
+            background: rgba(255,255,255,0.02); padding: 25px; border-radius: 15px;
+            border: 1px solid var(--border); transition: 0.3s;
+        }
+        .item:hover { border-color: var(--primary); background: rgba(0, 242, 255, 0.05); transform: translateY(-3px); }
+        
+        .profile-img {
+            width: 220px; height: 220px; border-radius: 50%;
+            object-fit: cover; border: 4px solid var(--primary);
+            margin-bottom: 20px; box-shadow: 0 0 40px rgba(0, 242, 255, 0.3);
+            background: #111;
+        }
+
+        .header-with-icon { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+        .header-with-icon i { font-size: 1.8rem; color: var(--primary); }
+
+        .cert-tag { font-size: 0.7rem; background: var(--secondary); padding: 2px 8px; border-radius: 4px; margin-bottom: 5px; display: inline-block; font-weight: bold; }
+        .skill-list { list-style: none; }
+        .skill-list li { margin-bottom: 8px; display: flex; align-items: center; gap: 10px; font-size: 0.95rem; color: #ccc; }
+        .skill-list i { color: var(--primary); font-size: 0.8rem; }
+
+        @media (max-width: 768px) {
+            nav { bottom: 15px; top: auto; left: 50%; transform: translateX(-50%); flex-direction: row; }
+            section { left: 15px; right: 15px; top: 15px; bottom: 85px; }
+            .content-card { padding: 25px; }
+            #cursor-glow { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="cursor-glow"></div>
+    <div class="bg-base"></div>
+
+    <nav id="sidebar">
+        <a href="#home" class="active" onclick="showPage('home')"><i class="fa-solid fa-house"></i><span>Home</span></a>
+        <a href="#about" onclick="showPage('about')"><i class="fa-solid fa-id-card"></i><span>About</span></a>
+        <a href="#education" onclick="showPage('education')"><i class="fa-solid fa-graduation-cap"></i><span>Education</span></a>
+        <a href="#experience" onclick="showPage('experience')"><i class="fa-solid fa-briefcase"></i><span>Experience</span></a>
+        <a href="#projects" onclick="showPage('projects')"><i class="fa-solid fa-rocket"></i><span>Projects</span></a>
+        <a href="#skills" onclick="showPage('skills')"><i class="fa-solid fa-brain"></i><span>Skills</span></a>
+        <a href="#certifications" onclick="showPage('certifications')"><i class="fa-solid fa-award"></i><span>Certifications</span></a>
+        <a href="#contact" onclick="showPage('contact')"><i class="fa-solid fa-paper-plane"></i><span>Contact</span></a>
+    </nav>
+
+    <section id="home" class="active">
+        <div style="text-align: center;">
+            <img src="profile.jpg" alt="Sanjay Saravanan" class="profile-img">
+            <h1 style="font-family: 'Space Grotesk'; font-size: 4.5rem; line-height: 1;">SANJAY<br><span class="accent">SARAVANAN</span></h1>
+            <p style="letter-spacing: 5px; margin-top: 15px; opacity: 0.8; font-weight: bold; color: var(--primary);">ELECTRONICS & AI ENGINEER</p>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="content-card">
+            <div class="header-with-icon">
+                <i class="fa-solid fa-user-tie"></i>
+                <h2 class="accent">Professional Summary</h2>
+            </div>
+            <p style="font-size: 1.2rem; line-height: 1.8; color: #eee;">
+                I am a forward-thinking <span class="accent">Electronics & AI Engineer</span> driven by the challenge of turning complex data into physical reality. My expertise lies at the intersection of <span class="accent">IoT architectures</span> and <span class="accent">Generative AI</span>, where I build intelligent, autonomous systems that redefine efficiency. With a background in embedded C++ and Python-driven ML, I focus on creating scalable, innovative solutions for the next generation of industrial and consumer electronics.
+            </p>
+            <div class="grid" style="margin-top: 30px;">
+                <div class="item">
+                    <div class="header-with-icon" style="margin-bottom:10px;">
+                        <i class="fa-solid fa-language" style="font-size: 1.2rem;"></i>
+                        <h3 class="accent">Languages</h3>
+                    </div>
+                    <ul class="skill-list">
+                        <li><i class="fa-solid fa-check"></i> <strong>English:</strong> Fluent (Speaking, Reading, Writing)</li>
+                        <li><i class="fa-solid fa-check"></i> <strong>Tamil:</strong> Native</li>
+                    </ul>
+                </div>
+                <div class="item">
+                    <div class="header-with-icon" style="margin-bottom:10px;">
+                        <i class="fa-solid fa-lightbulb" style="font-size: 1.2rem;"></i>
+                        <h3 class="accent">Philosophy</h3>
+                    </div>
+                    <p style="font-size: 0.9rem; opacity: 0.8;">Engineering design and prototyping through an iterative design-thinking mindset that prioritizes long-term scalability and ethics.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="education">
+        <div class="content-card">
+            <div class="header-with-icon">
+                <i class="fa-solid fa-user-graduate"></i>
+                <h2 class="accent">Education</h2>
+            </div>
+            <div class="grid">
+                <div class="item">
+                    <span class="accent">2025 – 2026 (Expected)</span>
+                    <h3>MSc in Electronics and Computer Technology (IoT)</h3>
+                    <p>Dublin City University, Ireland</p>
+                </div>
+                <div class="item">
+                    <span class="accent">May 2025</span>
+                    <h3>B.E. in Electronics and Communication Engineering</h3>
+                    <p>Kumaraguru College of Technology, India<br><strong>CGPA: 8/10</strong></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="experience">
+        <div class="content-card">
+            <div class="header-with-icon">
+                <i class="fa-solid fa-briefcase"></i>
+                <h2 class="accent">Professional Experience</h2>
+            </div>
+            <div class="item">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3>Production & Electronics Intern</h3>
+                    <span class="cert-tag" style="background: var(--primary); color:#000;">JUN 2023 - JUL 2023</span>
+                </div>
+                <p class="accent"><i class="fa-solid fa-building"></i> G Sports EV Cycle Company | Bangalore, India</p>
+                <p style="margin-top: 10px; opacity: 0.9;">Worked on electronic system integration in EV scooters. Gained practical experience in EV powertrain operations and assembly line quality control.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects">
+        <div class="content-card">
+            <div class="header-with-icon">
+                <i class="fa-solid fa-diagram-project"></i>
+                <h2 class="accent">Projects</h2>
+            </div>
+            <div class="grid">
+                <div class="item">
+                    <i class="fa-solid fa-tooth accent" style="font-size: 1.5rem; margin-bottom: 10px;"></i>
+                    <h3>Dental Caries Detection</h3>
+                    <p>Developed a model using Federated Learning and YOLO for early detection via X-ray images while preserving data privacy.</p>
+                </div>
+                <div class="item">
+                    <i class="fa-solid fa-magnifying-glass-plus accent" style="font-size: 1.5rem; margin-bottom: 10px;"></i>
+                    <h3>Spectacle Microscope</h3>
+                    <p>Wearable microscope for real-time magnification using Python image processing for precision tasks.</p>
+                </div>
+                <div class="item">
+                    <i class="fa-solid fa-terminal accent" style="font-size: 1.5rem; margin-bottom: 10px;"></i>
+                    <h3>Catering Simulation</h3>
+                    <p>C++ console application implementing inheritance, polymorphism, and dynamic memory management for business logistics.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills">
+        <div class="content-card">
+            <div class="header-with-icon">
+                <i class="fa-solid fa-gears"></i>
+                <h2 class="accent">Technical Arsenal</h2>
+            </div>
+            <div class="grid">
+                <div class="item">
+                    <h3 class="accent"><i class="fa-solid fa-code"></i> Programming</h3>
+                    <ul class="skill-list">
+                        <li><i class="fa-solid fa-chevron-right"></i> C++ (OOP, Algorithms, Real-time)</li>
+                        <li><i class="fa-solid fa-chevron-right"></i> Python (AI/ML, Data Analysis)</li>
+                        <li><i class="fa-solid fa-chevron-right"></i> Embedded C</li>
+                    </ul>
+                </div>
+                <div class="item">
+                    <h3 class="accent"><i class="fa-solid fa-microchip"></i> AI & IoT</h3>
+                    <ul class="skill-list">
+                        <li><i class="fa-solid fa-chevron-right"></i> YOLO / Neural Networks</li>
+                        <li><i class="fa-solid fa-chevron-right"></i> Federated Learning</li>
+                        <li><i class="fa-solid fa-chevron-right"></i> IoT Architecture</li>
+                    </ul>
+                </div>
+                <div class="item">
+                    <h3 class="accent"><i class="fa-solid fa-desktop"></i> Software & Tools</h3>
+                    <ul class="skill-list">
+                        <li><i class="fa-brands fa-microsoft"></i> MS Excel (Data Analysis)</li>
+                        <li><i class="fa-solid fa-file-word"></i> MS Word (Technical Reports)</li>
+                        <li><i class="fa-solid fa-file-powerpoint"></i> MS PowerPoint (Presentations)</li>
+                    </ul>
+                </div>
+                <div class="item">
+                    <h3 class="accent"><i class="fa-solid fa-users-gear"></i> Professional</h3>
+                    <ul class="skill-list">
+                        <li><i class="fa-solid fa-chevron-right"></i> Team Leadership & Organizing</li>
+                        <li><i class="fa-solid fa-chevron-right"></i> Design Thinking</li>
+                        <li><i class="fa-solid fa-chevron-right"></i> Clear Technical Documentation</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="certifications">
+        <div class="content-card">
+            <div class="header-with-icon">
+                <i class="fa-solid fa-file-invoice"></i>
+                <h2 class="accent">Publications & Certifications</h2>
+            </div>
+            <div class="item" style="border-left: 4px solid var(--primary);">
+                <span class="cert-tag">IEEE Publication</span>
+                <h3>Automated Dental Caries Detection System</h3>
+                <p style="font-size: 0.85rem; margin: 10px 0;">J. H. Priyadharsan, R. Ragasudhan and S. Sanjay | May 2025</p>
+                <a href="https://ieeexplore.ieee.org/document/11012522/" target="_blank" class="accent" style="text-decoration: none; font-weight: bold;"><i class="fa-solid fa-link"></i> View on IEEE Xplore</a>
+            </div>
+            <div class="grid">
+                <div class="item">
+                    <i class="fa-brands fa-aws accent" style="font-size: 1.5rem;"></i>
+                    <h4>AWS AI Practitioner</h4>
+                    <p style="font-size: 0.8rem;">Udemy | 2025</p>
+                </div>
+                <div class="item">
+                    <i class="fa-brands fa-linkedin accent" style="font-size: 1.5rem;"></i>
+                    <h4>Generative AI Essentials</h4>
+                    <p style="font-size: 0.8rem;">Microsoft | 2024</p>
+                </div>
+                <div class="item">
+                    <i class="fa-solid fa-certificate accent" style="font-size: 1.5rem;"></i>
+                    <h4>PBL Certification</h4>
+                    <p style="font-size: 0.8rem;">KCT | 2022</p>
+                </div>
+                <div class="item">
+                    <i class="fa-solid fa-shield-halved accent" style="font-size: 1.5rem;"></i>
+                    <h4>Ethics in Gen AI</h4>
+                    <p style="font-size: 0.8rem;">LinkedIn Learning | 2024</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="content-card" style="text-align: center;">
+            <div class="header-with-icon" style="justify-content: center;">
+                <i class="fa-solid fa-handshake"></i>
+                <h2 class="accent">Let's Connect</h2>
+            </div>
+            <p style="margin-bottom: 30px; opacity: 0.8;">Seeking internship and full-time roles in Electronics, IoT, and AI Engineering.</p>
+            <div class="item" style="display: inline-block; padding: 20px 40px; border-radius: 50px;">
+                <a href="mailto:sanjay.saravanan.ie@gmail.com" class="accent" style="font-size: 1.4rem; text-decoration: none; font-weight: 800; cursor: pointer;">
+                    <i class="fa-solid fa-envelope"></i> sanjay.saravanan.ie@gmail.com
+                </a>
+            </div>
+            <p style="margin-top: 20px; font-weight: bold;"><i class="fa-solid fa-phone"></i> +353 899751406 | +91 6385852617</p>
+            <div style="margin-top: 40px; display: flex; justify-content: center; gap: 20px;">
+                <a href="https://www.linkedin.com/in/sanjaysaravanan-tech/" target="_blank" style="color: #fff; font-size: 2.5rem; cursor: pointer;"><i class="fa-brands fa-linkedin"></i></a>
+                <a href="https://github.com/Sanjays3011" target="_blank" style="color: #fff; font-size: 2.5rem; cursor: pointer;"><i class="fa-brands fa-github"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Page Switching Logic
+        function showPage(pageId) {
+            document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('nav a').forEach(link => link.classList.remove('active'));
+            
+            document.getElementById(pageId).classList.add('active');
+            document.querySelector(`nav a[href="#${pageId}"]`).classList.add('active');
+        }
+
+        // Interactive Mouse Glow Logic
+        const glow = document.getElementById('cursor-glow');
+        window.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth) * 100;
+            const y = (e.clientY / window.innerHeight) * 100;
+            glow.style.setProperty('--x', x + '%');
+            glow.style.setProperty('--y', y + '%');
+        });
+    </script>
+</body>
+</html>
